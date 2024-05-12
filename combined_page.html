@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>New Patient Registration</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+ crossorigin=""></script>
+
+ <style>
+  #map { height: 400px; }
+
+  header {
+          background-color: #94D4E3;
+          padding: 6px;
+          display: flex;
+          align-items: center;
+        }
+
+        .icon img {
+          width: 80px; /* Adjust the width as needed */
+          height: 80px; /* Adjust the height as needed */
+          margin-left: 30px;
+        }
+
+        .header-left,
+        .header-right {
+          display: flex;
+          align-items: center;
+          margin-right: 30px; /* Adjust the margin as needed */
+          flex-grow: 1; /* Fill remaining space */
+        }
+
+        .header-left a,
+        .header-right a {
+          color: black;
+          text-decoration: underline; /* Add underline */
+          display: flex;
+          align-items: center;
+        }
+
+        .header-left i,
+        .header-right i {
+          margin-right: 6px; /* Adjust the margin as needed */
+        }
+
+
+          
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: 4CAF50;
+        }
+
+        form div {
+            margin-bottom: 10px;
+            
+        }
+
+        form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            
+        }
+
+       
+
+        form .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;            
+          
+        }
+
+        form input[type="submit"].form{
+            display: block;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+       
+
+        
+
+ </style>
+</head>
+<body>
+    <form action="map.php" method="post">
+      <header>
+        <div class="icon">
+          <a href="#"><img src="ager.PNG" alt="icon"></a>
+        </div>
+        <div class="header-left">
+          <i class="fas fa-home"></i>
+          <a href="agentLog.html">Home</a>
+        </div>
+        <div class="header-left">
+          <i class="fas fa-users"></i>
+          <a href="patient_info.php">Patients</a>
+        </div>
+
+        <div class="header-right">
+          <i class="fas fa-map"></i>
+          <a href="combined_page.html">Map</a> 
+      </div>
+        <div class="header-right">
+          <i class="fas fa-cog"></i>
+          <a href="settings.php">Settings</a>
+        </div>
+
+
+        <div class="header-right">
+          <i class="fas fa-sign-out-alt"></i>
+          <a href="responsable.html">Logout</a>
+        </div>
+      </header>
+      <div class="container">
+        <h2>Enter Address:</h2>
+        <form id="patient-form">
+
+
+          
+          <div>
+              <label for="address"></label>
+              <textarea id="address" name="address" required></textarea>
+          </div>
+      
+
+
+          <div class="form button-container">
+            <input type="submit" name="back" value="Find Nearby Doctors">
+        </div>
+        </form>
+        
+      </div>     
+      
+    </form>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+  <script>
+  var map = L.map('map');
+  map.setView([31.7917, -7.6034], 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  var marker, circle, zoomed = false;
+  var doctorMarker; // New variable to store doctor marker
+
+  function getCoordinates(address) {
+    var fullAddress = address;
+    var url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(fullAddress);
+
+    fetch(url)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        if (data.length > 0) {
+          var lat = parseFloat(data[0].lat);
+          var lon = parseFloat(data[0].lon);
+
+          if (marker) {
+            map.removeLayer(marker);
+          }
+
+          if (circle) {
+            map.removeLayer(circle);
+          }
+
+          marker = L.marker([lat, lon]).addTo(map);
+          circle = L.circle([lat, lon], {
+            color: 'blue',
+            fillColor: '#blue',
+            fillOpacity: 0.4,
+            radius: 500
+          }).addTo(map);
+
+          if (!zoomed) {
+            map.setView([lat, lon], 13);
+            zoomed = true;
+          }
+        } else {
+          console.log("Address not found");
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  var form = document.querySelector('form');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var address = document.getElementById('address').value;
+
+    getCoordinates(address);
+
+    // New logic to check for matching doctor and display red marker
+    fetch('map.php', {
+      method: 'POST',
+      body: JSON.stringify({ address: address })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.doctor) {
+        const doctor = data.doctor;
+        const markerColor = data.markerColor === 'available' ? 'green' : 'red';  // Set color based on availability
+        const markerMessage = data.markerColor === 'available' ? '' : 'Confirm doctor availability?';
+
+        doctorMarker = L.marker([doctor.latitude, doctor.longitude], {
+          icon: L.icon({
+            iconUrl: markerColor + '-marker.png',
+            iconSize: [25, 41]
+          })
+        }).addTo(map);
+
+         doctorMarker.bindPopup(`<b>${doctor.full_name}</b><br>${doctor.address}<br>${markerMessage}`);
+
+         markerMessage = data.markerColor === 'available' ? '' : 'Confirm doctor availability?';
+if (markerMessage) {
+  alert(markerMessage);  // Trigger alert if message exists
+}
+
+      } else {
+        console.log("No doctor found at this address");
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching doctor data:", error);
+    });
+  });
+
+  </script>
+  </body>
+</html>

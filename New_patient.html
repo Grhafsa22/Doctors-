@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOSPatients - New_patient</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        header {
+          background-color: #94D4E3;
+          padding: 6px;
+          display: flex;
+          align-items: center;
+        }
+
+        .icon img {
+          width: 80px; /* Adjust the width as needed */
+          height: 80px; /* Adjust the height as needed */
+          margin-left: 30px;
+        }
+
+        .header-left,
+        .header-right {
+          display: flex;
+          align-items: center;
+          margin-right: 30px; /* Adjust the margin as needed */
+          flex-grow: 1; /* Fill remaining space */
+        }
+
+        .header-left a,
+        .header-right a {
+          color: black;
+          text-decoration: underline; /* Add underline */
+          display: flex;
+          align-items: center;
+        }
+
+        .header-left i,
+        .header-right i {
+          margin-right: 6px; /* Adjust the margin as needed */
+        }
+
+
+        
+
+.container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form div {
+  margin-bottom: 10px;
+}
+
+form label {
+  display: block;
+  font-weight: bold;
+}
+
+form input[type="text"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.patients-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.patients-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#patient-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+#patient-list li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+#patient-list li span {
+  flex-grow: 1;
+  font-weight: bold;
+}
+
+#patient-list li button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+.container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+
+        
+
+       
+
+        form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        
+        /* CSS styles here */
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .radio-group label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        form .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        form input[type="submit"].form{
+            display: block;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #map {
+        height: 400px;
+        margin-top: 20px;
+      }
+    </style>
+        
+</head>
+<body>
+  <form action="patient_info.php" method="post">
+    <header>
+        <div class="icon">
+            <a href="#"><img src="ager.PNG" alt="icon"></a>
+        </div>
+        <div class="header-left">
+          <i class="fas fa-home"></i>
+          <a href="agentLog.html">Home</a> <!-- Update the href attribute with the relative path to the patient management system page -->
+        </div>
+        <div class="header-left">
+          <i class="fas fa-users"></i>
+          <a href="patient_info.php">Patients</a>
+        </div>
+
+
+        <div class="header-right">
+          <i class="fas fa-map"></i>
+          <a href="combined_page.html">Map</a> 
+      </div>
+
+
+
+        <div class="header-right">
+          <i class="fas fa-cog"></i>
+          <a href="settings.php">Settings</a>
+        </div>
+        <div class="header-right">
+          <i class="fas fa-sign-out-alt"></i>
+          <a href="responsable.html">Logout</a> <!-- Update the href attribute with the relative path to the first login form page -->
+        </div>
+    </header>
+
+  
+      
+  
+    <div class="container">
+      <h2>Patient Registration</h2>
+      <form id="patient-form">
+          <div>
+              <label for="first-name">First Name:</label>
+              <input type="text" id="first_name" name="first_name" required>
+          </div>
+          <div>
+              <label for="last-name">Last Name:</label>
+              <input type="text" id="last_name" name="last_name" required>
+          </div>
+          <div>
+            <label>Gender:</label>
+            <div class="radio-group">
+              <label for="male">
+                  <input type="radio" id="male" name="gender" value="male" required>
+                  Male
+              </label>
+              <label for="female">
+                  <input type="radio" id="female" name="gender" value="female" required>
+                  Female
+              </label>
+          </div>
+
+          <div>
+            <label for="statuts">Status Of The Patient:</label>
+            <textarea id="statuts" name="statuts" required></textarea>
+        </div>
+          
+          <div>
+              <label for="address">Address:</label>
+              <textarea id="address" name="address" required></textarea>
+          </div>
+
+          <div class="form button-container">
+            <input type="submit" name="back" class="form" value="Register">
+          </div>
+        </form>
+
+      <script>
+        // Add Javascript code to capture the address value when the form is submitted
+        const addressField = document.getElementById("address");
+        document.querySelector("form").addEventListener("submit", function(event) {
+          // No need to set the value to a hidden input field anymore
+          // The address value will be directly accessible in register.php
+        });
+      </script>
+      
+  </div>
+
+          <div id="map"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+  </form>
+</body>
+</html>

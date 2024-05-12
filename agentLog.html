@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOSPatients</title>
+    <style>
+        header {
+          background-color: #94D4E3;
+          padding: 6px;
+          display: flex;
+          align-items: center;
+        }
+
+        .icon img {
+          width: 80px;
+          height: 80px;
+          margin-left: 30px;
+        }
+
+        .header-left,
+        .header-right {
+          display: flex;
+          align-items: center;
+          margin-right: 30px;
+          flex-grow: 1;
+        }
+
+        .header-left a,
+        .header-right a {
+          color: black;
+          text-decoration: underline;
+          display: flex;
+          align-items: center;
+        }
+
+        .header-left i,
+        .header-right i {
+          margin-right: 6px;
+        }
+
+        .h2 {
+          text-align: center;
+          font-size: 48px;
+          color: black;
+          margin: 40px 0;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .buttons-container {
+          margin-top: 30px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .button {
+          display: inline-block;
+          padding: 20px 40px;
+          background-color: #4CAF50;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 10px;
+          font-size: 24px;
+        }
+
+        .plus-icon {
+          margin-right: 6px;
+        }
+
+        .folder-icon {
+          margin-right: 6px;
+        }
+
+        /* Hide the file input element */
+        .hidden {
+          display: none;
+        }
+
+        .file-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.file-info {
+  width: calc(33.33% - 10px);
+  padding: 10px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.file-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.file-content {
+  white-space: pre-wrap;
+}
+
+
+
+        
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="icon">
+            <a href="#"><img src="ager.PNG" alt="icon"></a>
+        </div>
+        <div class="header-left">
+            <i class="fas fa-home"></i>
+            <a href="agentLog.html">Home</a>
+        </div>
+        <div class="header-left">
+            <i class="fas fa-users"></i>
+            <a href="patient_info.php">Patients</a>
+        </div>
+
+        <div class="header-right">
+          <i class="fas fa-map"></i>
+          <a href="combined_page.html">Map</a> 
+      </div>
+      
+        <div class="header-right">
+            <i class="fas fa-cog"></i>
+            <a href="settings.php">Settings</a>
+        </div>
+        <div class="header-right">
+            <i class="fas fa-sign-out-alt"></i>
+            <a href="responsable.html">Logout</a>
+        </div>
+    </header>
+
+    <h2 class="h2">Welcome, Agent!</h2>
+
+    <div class="buttons-container">
+        <a href="New_patient.html" class="button"><i class="fas fa-plus-circle plus-icon"></i> Add New Patient</a>
+        <a href="#" class="button" onclick="document.getElementById('patient-folder-input').click()"><i class="fas fa-folder folder-icon"></i> Open Files</a>
+        <input type="file" id="patient-folder-input" class="hidden" webkitdirectory directory multiple onchange="openFiles(event)">
+    </div>
+
+    <div id="file-container" class="file-container"></div>
+
+    <script>
+      function openFiles(event) {
+          const files = event.target.files;
+          const fileContainer = document.getElementById('file-container');
+          fileContainer.innerHTML = '';
+  
+          for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              if (file.type === 'text/plain') {
+                  const reader = new FileReader();
+                  reader.onload = function (event) {
+                      const fileContent = event.target.result;
+                      const fileInfo = document.createElement('div');
+                      fileInfo.className = 'file-info';
+  
+                      const fileName = document.createElement('div');
+                      fileName.className = 'file-name';
+                      fileName.textContent = file.name;
+  
+                      const fileContentElement = document.createElement('div');
+                      fileContentElement.className = 'file-content';
+                      fileContentElement.textContent = fileContent;
+  
+                      fileInfo.appendChild(fileName);
+                      fileInfo.appendChild(fileContentElement);
+                      fileContainer.appendChild(fileInfo);
+                  };
+                  reader.readAsText(file);
+              }
+          }
+      }
+  </script>
+</body>
+</html>
