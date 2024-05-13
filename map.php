@@ -12,11 +12,14 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
-// Access form data
-$address = $_POST['address'];
+// // Access form data
+// $address = $_POST['address'];
+// $latitude = $_POST['latitude'];
+// $longitude = $_POST['longitude'];
 
-// Combine address components
-$fullAddress = $address;
+// // Combine address components
+// $fullAddress = $address;
+$searchRadius = 3000; // Example radius: 3 km
 
 // ... (Optional) Use geocoding API to convert address to coordinates (latitude, longitude)
 
@@ -25,14 +28,20 @@ $fullAddress = $address;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
 
-  if (isset($data['address'])) {
+  if (isset($data['address']) && isset($data['latitude']) && isset($data['longitude'])) {
     $address = $data['address'];
-
+    $latitude = $data['latitude'];
+    $longitude = $data['longitude'];
     // Prepare SQL query to find a doctor at the specified address (consider partial matching)
+    // $sql = "SELECT d.full_name, d.address, d.latitude, d.longitude, d.available
+    // FROM doctors d
+    // WHERE d.address LIKE '%$address%'
+    // LIMIT 1;  -- Limit to one doctor (optional)";
+
     $sql = "SELECT d.full_name, d.address, d.latitude, d.longitude, d.available
-    FROM doctors d
-    WHERE d.address LIKE '%$address%'
-    LIMIT 1;  -- Limit to one doctor (optional)";
+            FROM doctors d
+            WHERE ST_Distance_Sphere(Point($longitude, $latitude), Point(d.longitude, d.latitude)) <= $searchRadius
+            LIMIT 10;"; // Limit to 10 doctors (optional)
 
     $result = $conn->query($sql);
 
@@ -40,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $doctor = $result->fetch_assoc();
       $markerColor = $doctor['available'] === 'available' ? 'available' : 'not available';
       $markerMessage = $doctor['available'] === 'available' ? '' : 'Confirm doctor availability?';
-      
+
       echo json_encode(["doctor" => $doctor, "markerColor" => $markerColor, "markerMessage" => $markerMessage]);
     } else {
       // ... (Handle case where no doctor is found)
@@ -54,6 +63,3 @@ if (isset($_POST['back'])) {
 }
 
 $conn->close();
-?>
-
-
